@@ -12,7 +12,7 @@ export default function Experience() {
   // Merge static data with translations
   const mergedExperiences = experiences.map((exp) => {
     const translated = t.experience.items.find((item) => item.id === exp.id);
-    return { ...exp, period: translated?.period ?? exp.period, tasks: translated?.tasks ?? [] };
+    return { ...exp, period: translated?.period ?? "", tasks: translated?.tasks ?? [] };
   });
 
   return (
