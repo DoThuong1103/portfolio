@@ -7,8 +7,8 @@ export const personalInfo = {
   dob: "11/03/2001",
   summary:
     "Quan tâm đến tối ưu hiệu năng, clean code và trải nghiệm người dùng (UX). Mong muốn tiếp tục phát triển chuyên sâu về React ecosystem và kiến trúc frontend cho các hệ thống lớn.",
-  github: "https://github.com/dothuong2k1",
-  linkedin: "https://linkedin.com/in/dothuong2k1",
+  github: "https://github.com/DoThuong1103",
+  linkedin: "https://www.linkedin.com/in/do-thuong-8b7080267/",
 };
 
 export const skills = [
