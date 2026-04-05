@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 export const metadata: Metadata = {
   title: "Đỗ Bá Thượng – Front-End Developer | React & Next.js",
@@ -20,14 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi">
+    <html lang="en">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="relative">
         <div className="bg-animated" />
-        {children}
+        <LanguageProvider>{children}</LanguageProvider>
       </body>
     </html>
   );

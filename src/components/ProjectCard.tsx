@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Calendar, Users, CheckCircle2, ChevronRight, BarChart3, Hexagon, ShoppingCart } from "lucide-react";
-import { Project } from "../data/portfolio";
+import { useLanguage } from "@/context/LanguageContext";
 
 const iconMap: Record<string, React.ReactNode> = {
   BarChart3: <BarChart3 size={28} />,
@@ -10,17 +10,28 @@ const iconMap: Record<string, React.ReactNode> = {
   ShoppingCart: <ShoppingCart size={28} />,
 };
 
+export interface MergedProject {
+  id: number;
+  name: string;
+  client: string;
+  period: string;
+  teamSize: number;
+  role: string;
+  gradient: string;
+  accentColor: string;
+  description: string;
+  tech: string[];
+  responsibilities: string[];
+  highlight: string;
+  icon: string;
+}
+
 interface ProjectCardProps {
-  project: Project; // Type from portfolio.ts
+  project: MergedProject;
 }
 
 const accentClassMap: Record<string, {
-  band: string;
-  iconWrap: string;
-  badge: string;
-  techTag: string;
-  text: string;
-  divider: string;
+  band: string; iconWrap: string; badge: string; techTag: string; text: string; divider: string;
 }> = {
   "#6c63ff": {
     band: "bg-[linear-gradient(90deg,#6c63ff,transparent)]",
@@ -49,6 +60,7 @@ const accentClassMap: Record<string, {
 };
 
 export default function ProjectCard({ project }: ProjectCardProps) {
+  const { t } = useLanguage();
   const [isExpanded, setIsExpanded] = useState(false);
   const accentClasses = accentClassMap[project.accentColor] ?? {
     band: "bg-[linear-gradient(90deg,var(--accent-primary),transparent)]",
@@ -60,28 +72,18 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   };
 
   return (
-    <div
-      className="project-card cursor-pointer group"
-      onClick={() => setIsExpanded(!isExpanded)}
-    >
-      {/* Card top gradient band */}
+    <div className="project-card cursor-pointer group" onClick={() => setIsExpanded(!isExpanded)}>
       <div className={`h-1 w-full ${accentClasses.band}`} />
 
       <div className="p-8">
         {/* Project header */}
         <div className="flex items-start gap-4 mb-5">
-          <div
-            className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${accentClasses.iconWrap}`}
-          >
+          <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 ${accentClasses.iconWrap}`}>
             {iconMap[project.icon]}
           </div>
           <div className="flex-1">
-            <h3 className="text-[20px] font-extrabold tracking-[-0.01em] mb-1">
-              {project.name}
-            </h3>
-            <span
-              className={`text-[11px] font-mono py-0.5 px-2.5 rounded-full ${accentClasses.badge}`}
-            >
+            <h3 className="text-[20px] font-extrabold tracking-[-0.01em] mb-1">{project.name}</h3>
+            <span className={`text-[11px] font-mono py-0.5 px-2.5 rounded-full ${accentClasses.badge}`}>
               {project.highlight}
             </span>
           </div>
@@ -90,53 +92,39 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         {/* Meta info */}
         <div className="flex flex-wrap gap-4 mb-4">
           <MetaItem icon={<Calendar size={13} />} text={project.period} />
-          <MetaItem icon={<Users size={13} />} text={`${project.teamSize} thành viên`} />
+          <MetaItem icon={<Users size={13} />} text={`${project.teamSize} ${t.projects.teamMembers}`} />
         </div>
 
         {/* Description */}
-        <p className="text-(--text-secondary) text-[14px] leading-[1.8] mb-5">
-          {project.description}
-        </p>
+        <p className="text-(--text-secondary) text-[14px] leading-[1.8] mb-5">{project.description}</p>
 
         {/* Tech tags */}
         <div className="flex flex-wrap gap-2 mb-5">
-          {project.tech.map((t: string) => (
-            <span
-              key={t}
-              className={`py-1 px-2.5 rounded-lg text-[12px] font-mono font-medium ${accentClasses.techTag}`}
-            >
-              {t}
+          {project.tech.map((tech: string) => (
+            <span key={tech} className={`py-1 px-2.5 rounded-lg text-[12px] font-mono font-medium ${accentClasses.techTag}`}>
+              {tech}
             </span>
           ))}
         </div>
 
         {/* Expand button */}
         <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsExpanded(!isExpanded);
-          }}
+          onClick={(e) => { e.stopPropagation(); setIsExpanded(!isExpanded); }}
           className={`flex items-center gap-1.5 bg-transparent border-none text-[13px] font-semibold cursor-pointer p-0 transition-all duration-300 group-hover:gap-2 ${accentClasses.text}`}
         >
-          {isExpanded ? "Thu gọn" : "Xem chi tiết"}
-          <ChevronRight
-            size={16}
-            className={`transition-transform duration-300 ${isExpanded ? "rotate-90" : "rotate-0"}`}
-          />
+          {isExpanded ? t.projects.collapse : t.projects.viewDetail}
+          <ChevronRight size={16} className={`transition-transform duration-300 ${isExpanded ? "rotate-90" : "rotate-0"}`} />
         </button>
 
         {/* Expanded responsibilities */}
         {isExpanded && (
           <div className={`mt-5 pt-5 animate-[fadeIn_0.3s_ease] ${accentClasses.divider}`}>
             <div className="text-[13px] font-semibold text-(--text-secondary) mb-3 uppercase tracking-[0.08em]">
-              Trách nhiệm
+              {t.projects.responsibilities}
             </div>
             <ul className="flex flex-col gap-2">
               {project.responsibilities.map((resp: string, i: number) => (
-                <li
-                  key={i}
-                  className="flex items-start gap-2 text-(--text-secondary) text-[13px] leading-[1.7]"
-                >
+                <li key={i} className="flex items-start gap-2 text-(--text-secondary) text-[13px] leading-[1.7]">
                   <CheckCircle2 size={14} className={`shrink-0 mt-[3px] ${accentClasses.text}`} />
                   {resp}
                 </li>

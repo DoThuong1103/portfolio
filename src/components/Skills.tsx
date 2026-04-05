@@ -1,8 +1,10 @@
-// Server Component
+"use client";
+
 import { Code2, Layers, Database, Palette, Plug } from "lucide-react";
 import { skills } from "@/data/portfolio";
 import SectionTag from "./SectionTag";
 import ScrollReveal from "./ScrollReveal";
+import { useLanguage } from "@/context/LanguageContext";
 
 const iconMap: Record<string, React.ReactNode> = {
   Code2: <Code2 size={22} />,
@@ -36,20 +38,20 @@ const skillColorClasses: Record<string, { icon: string; pill: string }> = {
 };
 
 export default function Skills() {
+  const { t } = useLanguage();
+
   return (
     <section id="skills" className="py-[100px] relative">
-      {/* Background decoration */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-[600px] max-h-[600px] rounded-full blur-[60px] pointer-events-none bg-[radial-gradient(circle,rgba(108,99,255,0.05)_0%,transparent_70%)]" />
 
       <div className="container-custom relative">
-        {/* Header */}
         <div className="text-center mb-16">
-          <SectionTag text="Kỹ Năng" />
+          <SectionTag text={t.skills.tag} />
           <h2 className="section-heading mt-4 mb-4">
-            Tech <span className="gradient-text">Stack</span>
+            {t.skills.headingBefore}<span className="gradient-text">{t.skills.headingGradient}</span>
           </h2>
           <p className="text-(--text-secondary) max-w-[480px] mx-auto text-[15px]">
-            Các công nghệ và công cụ tôi sử dụng hàng ngày để xây dựng sản phẩm chất lượng
+            {t.skills.subheading}
           </p>
         </div>
 
@@ -57,26 +59,15 @@ export default function Skills() {
           {skills.map((category, catIdx) => (
             <ScrollReveal key={category.category} delay={catIdx * 0.1}>
               <div className="glass-card p-7 h-full">
-                {/* Category header */}
                 <div className="flex items-center gap-3 mb-5">
-                  <div
-                    className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${skillColorClasses[category.color]?.icon ?? "bg-(--accent-primary) text-white border border-transparent"}`}
-                  >
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${skillColorClasses[category.color]?.icon ?? "bg-(--accent-primary) text-white border border-transparent"}`}>
                     {iconMap[category.icon]}
                   </div>
-                  <h3 className="font-bold text-[16px] text-(--text-primary)">
-                    {category.category}
-                  </h3>
+                  <h3 className="font-bold text-[16px] text-(--text-primary)">{category.category}</h3>
                 </div>
-
-                {/* Skills */}
                 <div className="flex flex-wrap gap-2">
                   {category.items.map((skill) => (
-                    <SkillPill
-                      key={skill}
-                      name={skill}
-                      color={category.color}
-                    />
+                    <SkillPill key={skill} name={skill} color={category.color} />
                   ))}
                 </div>
               </div>
@@ -84,11 +75,10 @@ export default function Skills() {
           ))}
         </div>
 
-        {/* Big tech logos strip */}
         <ScrollReveal delay={0.4}>
           <div className="mt-[60px] p-8 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.06)] rounded-[20px] text-center">
             <p className="text-(--text-muted) text-[12px] tracking-[0.15em] uppercase mb-6 font-mono">
-              Công nghệ chính
+              {t.skills.mainTech}
             </p>
             <div className="flex justify-center items-center gap-12 flex-wrap">
               {["React", "Next.js", "TypeScript", "Redux", "Tailwind", "D3.js", "Firebase"].map((tech) => (
@@ -109,11 +99,8 @@ export default function Skills() {
 
 function SkillPill({ name, color }: { name: string; color: string }) {
   const colorClass = skillColorClasses[color]?.pill ?? "bg-[var(--accent-primary)] border-transparent text-white";
-
   return (
-    <span
-      className={`inline-flex items-center px-3 py-1.5 border rounded-lg text-[13px] font-medium font-mono transition-all duration-400 ease-out cursor-default whitespace-nowrap hover:-translate-y-0.5 ${colorClass}`}
-    >
+    <span className={`inline-flex items-center px-3 py-1.5 border rounded-lg text-[13px] font-medium font-mono transition-all duration-400 ease-out cursor-default whitespace-nowrap hover:-translate-y-0.5 ${colorClass}`}>
       {name}
     </span>
   );

@@ -2,23 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { Menu, X, Code2 } from "lucide-react";
-
-const navItems = [
-  { label: "Giới thiệu", href: "#about" },
-  { label: "Kỹ năng", href: "#skills" },
-  { label: "Kinh nghiệm", href: "#experience" },
-  { label: "Dự án", href: "#projects" },
-];
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
+  const { t } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
 
+  const navItems = [
+    { label: t.nav.about, href: "#about" },
+    { label: t.nav.skills, href: "#skills" },
+    { label: t.nav.experience, href: "#experience" },
+    { label: t.nav.projects, href: "#projects" },
+  ];
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-
       const sections = navItems.map((item) => item.href.slice(1));
       for (const section of sections.reverse()) {
         const el = document.getElementById(section);
@@ -28,9 +30,9 @@ export default function Navbar() {
         }
       }
     };
-
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -53,7 +55,7 @@ export default function Navbar() {
         </a>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {navItems.map((item) => (
             <a
               key={item.href}
@@ -66,22 +68,23 @@ export default function Navbar() {
               )}
             </a>
           ))}
-          <a
-            href="#contact"
-            className="btn-glow no-underline text-[13px] py-2 px-5"
-          >
-            Liên hệ ngay
+          <LanguageSwitcher />
+          <a href="#contact" className="btn-glow no-underline text-[13px] py-2 px-5">
+            {t.nav.contactBtn}
           </a>
         </div>
 
         {/* Mobile toggle */}
-        <button
-          onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden flex bg-transparent border-none text-(--text-primary) cursor-pointer p-2"
-          aria-label="Toggle menu"
-        >
-          {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="md:hidden flex items-center gap-3">
+          <LanguageSwitcher />
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="flex bg-transparent border-none text-(--text-primary) cursor-pointer p-2"
+            aria-label="Toggle menu"
+          >
+            {mobileOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -97,11 +100,8 @@ export default function Navbar() {
               {item.label}
             </a>
           ))}
-          <a
-            href="#contact"
-            className="btn-glow inline-block mt-4 no-underline"
-          >
-            Liên hệ ngay
+          <a href="#contact" className="btn-glow inline-block mt-4 no-underline">
+            {t.nav.contactBtn}
           </a>
         </div>
       )}
